@@ -1,0 +1,103 @@
+Đội có chỉ số tốt nhất cho mỗi thống kê:
+==================================================
+(Lưu ý: Với các chỉ số như thẻ vàng, thẻ đỏ, phạm lỗi, mất bóng,... thì giá trị thấp nhất là tốt nhất)
+
+age: Fulham (cao nhất)
+matches_played: Liverpool (cao nhất)
+starts: Brentford (cao nhất)
+minutes: Liverpool (cao nhất)
+goals: Liverpool (cao nhất)
+assists: Liverpool (cao nhất)
+yellow_cards: Manchester City (thấp nhất)
+red_cards: Leicester City (thấp nhất)
+xG: Liverpool (cao nhất)
+xAG: Liverpool (cao nhất)
+GA90: Manchester Utd (cao nhất)
+Save%: Bournemouth (cao nhất)
+CS%: Brentford (cao nhất)
+PK_Save%: Everton (cao nhất)
+PrgC: Manchester City (cao nhất)
+PrgP: Liverpool (cao nhất)
+PrgR: Liverpool (cao nhất)
+per90_Gls: Manchester City (cao nhất)
+per90_Ast: Liverpool (cao nhất)
+per90_xG: Aston Villa (cao nhất)
+per90_xAG: Chelsea (cao nhất)
+SoT%: Nott'ham Forest (cao nhất)
+SoT/90: Bournemouth (cao nhất)
+G/Sh: Arsenal (cao nhất)
+Dist: Arsenal (thấp nhất)
+Pass_Cmp: Liverpool (cao nhất)
+Pass_Cmp%: Manchester City (cao nhất)
+TotDist: Ipswich Town (thấp nhất)
+Short_Cmp%: Manchester City (cao nhất)
+Medium_Cmp%: Manchester City (cao nhất)
+Long_Cmp%: Liverpool (cao nhất)
+KP: Liverpool (cao nhất)
+1/3: Liverpool (cao nhất)
+PPA: Liverpool (cao nhất)
+CrsPA: Fulham (cao nhất)
+PrgP.1: Liverpool (cao nhất)
+SCA: Liverpool (cao nhất)
+SCA90: Liverpool (cao nhất)
+GCA: Liverpool (cao nhất)
+GCA90: Liverpool (cao nhất)
+Tkl: Crystal Palace (cao nhất)
+TklW: Crystal Palace (cao nhất)
+Challenges_Att: Manchester City (thấp nhất)
+Challenges_Lost: Aston Villa (thấp nhất)
+Blocks: Brentford (cao nhất)
+Blocks_SH: Brentford (cao nhất)
+Blocks_Pass: Crystal Palace (cao nhất)
+Blocks_Int: Bournemouth (cao nhất)
+Touches: Liverpool (cao nhất)
+Def_Pen: Brentford (cao nhất)
+Def_3rd: Brentford (cao nhất)
+Mid_3rd: Liverpool (cao nhất)
+Att_3rd: Manchester City (cao nhất)
+Att_Pen: Liverpool (cao nhất)
+Take_Att: Arsenal (cao nhất)
+Take_Succ%: Liverpool (cao nhất)
+Take_Tkld%: Arsenal (thấp nhất)
+Carries: Manchester City (cao nhất)
+Carries_ProDist: Ipswich Town (thấp nhất)
+Carries_ProgC: Ipswich Town (thấp nhất)
+Carries_1/3: Manchester City (cao nhất)
+Carries_CPA: Manchester City (cao nhất)
+Carries_Mis: Southampton (thấp nhất)
+Carries_Dis: Ipswich Town (thấp nhất)
+REC: Liverpool (cao nhất)
+REC_PrgR: Liverpool (cao nhất)
+Fls: Manchester City (thấp nhất)
+Fld: Newcastle Utd (cao nhất)
+Off: Brighton (thấp nhất)
+Crs: Fulham (cao nhất)
+OG: Chelsea (thấp nhất)
+Recov: Bournemouth (cao nhất)
+Aerial_Won: Brentford (cao nhất)
+Aerial_Lost: Manchester City (thấp nhất)
+Aerial_Won%: Brentford (cao nhất)
+
+==================================================
+Xếp hạng đội theo số chỉ số tốt nhất:
+==================================================
+1. Liverpool: 25 chỉ số
+2. Manchester City: 13 chỉ số
+3. Brentford: 8 chỉ số
+4. Bournemouth: 4 chỉ số
+5. Arsenal: 4 chỉ số
+6. Ipswich Town: 4 chỉ số
+7. Fulham: 3 chỉ số
+8. Crystal Palace: 3 chỉ số
+9. Aston Villa: 2 chỉ số
+10. Chelsea: 2 chỉ số
+11. Leicester City: 1 chỉ số
+12. Manchester Utd: 1 chỉ số
+13. Everton: 1 chỉ số
+14. Nott'ham Forest: 1 chỉ số
+15. Southampton: 1 chỉ số
+16. Newcastle Utd: 1 chỉ số
+17. Brighton: 1 chỉ số
+
+==================================================
+Theo phân tích, đội Liverpool đang có phong độ tốt nhất trong mùa giải Premier League 2024-2025, dẫn đầu với 25 chỉ số tốt nhất.
