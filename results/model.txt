@@ -1,85 +1,95 @@
-ĐỀ XUẤT PHƯƠNG PHÁP ƯỚC TÍNH GIÁ TRỊ CẦU THỦ (Propose a method for estimating player values)
+ĐỀ XUẤT PHƯƠNG PHÁP ƯỚC TÍNH GIÁ TRỊ CẦU THỦ
 
-Mục tiêu là xây dựng một mô hình dự đoán giá trị chuyển nhượng của cầu thủ dựa trên các số liệu thống kê và thông tin liên quan. Đây là một bài toán hồi quy (regression) trong học máy.
+Mục tiêu là xây dựng một mô hình dự đoán giá trị chuyển nhượng của cầu thủ dựa trên các số liệu thống kê và thông tin liên quan. Đây là một bài toán hồi quy trong học máy.
 
 Các bước thực hiện:
 
-1. Thu thập và Chuẩn bị Dữ liệu (Data Collection and Preparation):
-    * Dữ liệu đặc trưng (Features):
-        - Thu thập dữ liệu thống kê chi tiết của cầu thủ từ fbref.com như đã làm ở Phần I (ví dụ: tuổi, vị trí, số phút thi đấu, bàn thắng, kiến tạo, xG, xAG, các chỉ số phòng ngự, tấn công, chuyền bóng, v.v.).
-        - Thu thập dữ liệu bổ sung có thể ảnh hưởng đến giá trị:
-            + Tuổi (Age): Rất quan trọng, giá trị thường đạt đỉnh ở một độ tuổi nhất định.
-            + Vị trí thi đấu (Position): Các vị trí khác nhau có thang giá trị khác nhau.
-            + Thời hạn hợp đồng còn lại (Contract Remaining): Cầu thủ còn ít hợp đồng thường có giá thấp hơn (khó thu thập một cách hệ thống từ các nguồn đã cho, nhưng là yếu tố quan trọng trong thực tế).
-            + Câu lạc bộ hiện tại và giải đấu (Current Club & League Strength): Mặc dù ở đây chỉ xét Premier League, nhưng danh tiếng CLB có thể ảnh hưởng.
-            + Quốc tịch và số lần khoác áo ĐTQG (Nationality & International Caps): Có thể ảnh hưởng.
-    * Dữ liệu mục tiêu (Target Variable):
-        - Thu thập giá trị chuyển nhượng ước tính (estimated market value) hoặc giá trị chuyển nhượng thực tế (nếu có) từ footballtransfers.com cho các cầu thủ đã chơi trên 900 phút trong mùa giải 2024-2025.
-    * Kết hợp dữ liệu (Data Merging):
-        - Ghép nối dữ liệu thống kê từ fbref.com với dữ liệu giá trị từ footballtransfers.com dựa trên tên cầu thủ (cần xử lý cẩn thận các trường hợp tên giống nhau, có thể kết hợp thêm CLB, tuổi để định danh).
-    * Làm sạch dữ liệu (Data Cleaning):
-        - Xử lý các giá trị thiếu ("N/a" hoặc trống): Có thể thay thế bằng giá trị trung bình, trung vị, 0, hoặc một giá trị đặc biệt, hoặc loại bỏ hàng/cột nếu thiếu quá nhiều. Đối với các chỉ số không áp dụng (ví dụ: chỉ số thủ môn cho tiền đạo), việc để là 0 hoặc "N/a" cần được xem xét cẩn thận.
-        - Chuyển đổi kiểu dữ liệu: Đảm bảo các cột số là số, các cột hạng mục là hạng mục.
-    * Mã hóa đặc trưng hạng mục (Categorical Feature Encoding):
-        - Các đặc trưng như 'Vị trí', 'Quốc tịch', 'Câu lạc bộ' cần được chuyển đổi sang dạng số. Có thể dùng One-Hot Encoding hoặc Label Encoding (tùy thuộc vào mô hình).
+1. Thu thập và Chuẩn bị Dữ liệu:
 
-2. Lựa chọn Đặc trưng (Feature Selection):
-    * Mục tiêu: Chọn ra những đặc trưng có ảnh hưởng lớn nhất đến giá trị cầu thủ và loại bỏ những đặc trưng nhiễu hoặc không liên quan để cải thiện hiệu suất mô hình và giảm nguy cơ overfitting.
-    * Phương pháp:
-        1. Phân tích tương quan (Correlation Analysis):
-            - Tính toán ma trận tương quan giữa các đặc trưng số và giá trị mục tiêu. Chọn các đặc trưng có độ tương quan cao (dương hoặc âm) với giá trị mục tiêu.
-            - Kiểm tra đa cộng tuyến (multicollinearity) giữa các đặc trưng (ví dụ: xG và Bàn thắng có thể tương quan cao). Nếu có đa cộng tuyến mạnh, có thể giữ lại một trong số chúng hoặc tạo đặc trưng mới.
-        2. Sử dụng kiến thức chuyên môn (Domain Knowledge):
-            - Các chuyên gia bóng đá thường biết những chỉ số nào quan trọng. Ví dụ: Bàn thắng, Kiến tạo, Tuổi, Số phút thi đấu, xG, xAG thường rất quan trọng.
-        3. Dựa trên mô hình (Model-based selection):
-            - Regularization (L1 - Lasso): Các mô hình hồi quy tuyến tính với L1 regularization có khả năng tự động co các hệ số của đặc trưng không quan trọng về 0, từ đó thực hiện lựa chọn đặc trưng.
-            - Feature Importance từ các mô hình cây (Tree-based models): Các mô hình như Random Forest, Gradient Boosting (ví dụ: XGBoost, LightGBM) có thể cung cấp điểm số về mức độ quan trọng của từng đặc trưng trong việc dự đoán.
-            - Recursive Feature Elimination (RFE): Xây dựng mô hình lặp đi lặp lại, mỗi lần loại bỏ đặc trưng yếu nhất cho đến khi đạt được số lượng đặc trưng mong muốn hoặc hiệu suất tối ưu.
-        4. PCA (Principal Component Analysis): Mặc dù không trực tiếp chọn đặc trưng gốc, PCA có thể giảm số chiều bằng cách tạo ra các thành phần chính mới, giữ lại phần lớn thông tin. Tuy nhiên, các thành phần này khó diễn giải hơn đặc trưng gốc. (Thường dùng cho giảm chiều hơn là lựa chọn đặc trưng để diễn giải).
+   * Dữ liệu đặc trưng:
+     - Thu thập dữ liệu thống kê chi tiết của cầu thủ từ fbref.com (ví dụ: tuổi, vị trí, số phút thi đấu, bàn thắng, kiến tạo, xG, xAG, các chỉ số phòng ngự, tấn công, chuyền bóng, v.v.).
+     - Thu thập dữ liệu bổ sung có thể ảnh hưởng đến giá trị:
+       + Tuổi: Rất quan trọng.
+       + Vị trí thi đấu: Các vị trí khác nhau có thang giá trị khác nhau.
+       + Thời hạn hợp đồng còn lại: Ít hợp đồng thường giá thấp hơn (khó thu thập hệ thống, nhưng quan trọng).
+       + Câu lạc bộ hiện tại và giải đấu: Danh tiếng CLB có thể ảnh hưởng.
+       + Quốc tịch và số lần khoác áo ĐTQG: Có thể ảnh hưởng.
 
-    * Các đặc trưng tiềm năng quan trọng: Tuổi (Age), Vị trí (Position), Số phút thi đấu (MP), Bàn thắng (Gls), Kiến tạo (Ast), Bàn thắng kỳ vọng (xG), Kiến tạo kỳ vọng (xAG), các chỉ số "Per 90 minutes" (Gls90, Ast90, xG90, xAG90), Tỷ lệ chuyền bóng thành công (Cmp%), các chỉ số về tạo cơ hội (SCA, GCA), và các chỉ số phòng ngự quan trọng cho hậu vệ/thủ môn.
+   * Dữ liệu mục tiêu:
+     - Thu thập giá trị chuyển nhượng ước tính hoặc thực tế từ footballtransfers.com cho cầu thủ chơi >900 phút mùa 2024-2025.
 
-3. Lựa chọn Mô hình (Model Selection):
-    * Mục tiêu: Chọn mô hình học máy phù hợp nhất với dữ liệu và bài toán.
-    * Các ứng viên mô hình phổ biến cho bài toán hồi quy:
-        1. Linear Regression (Hồi quy tuyến tính): Đơn giản, dễ diễn giải, là một baseline tốt. Có thể bao gồm Ridge (L2) hoặc Lasso (L1) regression để xử lý đa cộng tuyến và lựa chọn đặc trưng.
-        2. Support Vector Regression (SVR): Hiệu quả trong không gian nhiều chiều.
-        3. Decision Tree Regression (Cây quyết định hồi quy): Dễ hiểu, nhưng dễ bị overfitting.
-        4. Random Forest Regression: Ensemble của nhiều cây quyết định, giảm overfitting, hiệu suất tốt, xử lý tốt các mối quan hệ phi tuyến.
-        5. Gradient Boosting Regressors (ví dụ: XGBoost, LightGBM, CatBoost): Thường cho hiệu suất rất cao trên dữ liệu dạng bảng, có khả năng xử lý tốt các mối quan hệ phức tạp và tương tác giữa các đặc trưng. Đây thường là lựa chọn hàng đầu.
-        6. Neural Networks (Mạng nơ-ron): Có thể mô hình hóa các mối quan hệ rất phức tạp, nhưng đòi hỏi nhiều dữ liệu và tinh chỉnh cẩn thận.
+   * Kết hợp dữ liệu:
+     - Ghép nối dữ liệu thống kê (fbref) với dữ liệu giá trị (footballtransfers) dựa trên tên cầu thủ (cẩn thận tên giống nhau, có thể dùng thêm CLB, tuổi).
 
-    * Tiêu chí lựa chọn:
-        - Độ chính xác dự đoán (Prediction Accuracy): Đánh giá bằng các metric như MAE (Mean Absolute Error), MSE (Mean Squared Error), RMSE (Root Mean Squared Error), R-squared.
-        - Khả năng diễn giải (Interpretability): Mô hình tuyến tính, cây quyết định dễ diễn giải hơn so với Random Forest hay Gradient Boosting, Neural Network.
-        - Thời gian huấn luyện và dự đoán (Training/Prediction Time).
-        - Khả năng xử lý các loại dữ liệu khác nhau.
-        - Độ phức tạp của mô hình và nguy cơ overfitting.
+   * Làm sạch dữ liệu:
+     - Xử lý giá trị thiếu: Thay bằng trung bình, trung vị, 0, giá trị đặc biệt, hoặc loại bỏ. Cân nhắc chỉ số không áp dụng (thủ môn cho tiền đạo).
+     - Chuyển đổi kiểu dữ liệu: Số là số, hạng mục là hạng mục.
 
-    * Đề xuất cụ thể:
-        - Bắt đầu với Linear Regression (có thể là Ridge hoặc Lasso) để làm baseline.
-        - Thử nghiệm với Random Forest Regressor và Gradient Boosting Regressor (ví dụ: XGBoost hoặc LightGBM). Đây là những ứng cử viên mạnh mẽ.
-        - Sử dụng K-fold Cross-Validation để đánh giá hiệu suất của các mô hình một cách đáng tin cậy và tránh overfitting trên tập huấn luyện.
-        - Tinh chỉnh siêu tham số (Hyperparameter Tuning) cho mô hình tốt nhất (ví dụ: sử dụng GridSearchCV hoặc RandomizedSearchCV).
 
-4. Đánh giá và Tinh chỉnh Mô hình (Model Evaluation and Refinement):
-    * Sử dụng tập dữ liệu kiểm tra (test set) riêng biệt để đánh giá hiệu suất cuối cùng của mô hình đã chọn.
-    * Phân tích lỗi: Xem xét các trường hợp mô hình dự đoán sai lệch nhiều để hiểu điểm yếu và cải thiện.
-    * Lặp lại các bước lựa chọn đặc trưng, lựa chọn mô hình nếu cần thiết.
+2. Lựa chọn Đặc trưng:
+
+   * Mục tiêu: Chọn đặc trưng ảnh hưởng lớn, loại bỏ nhiễu, giảm overfitting.
+
+   * Phương pháp:
+     1. Phân tích tương quan:
+        - Tính ma trận tương quan giữa đặc trưng số và giá trị mục tiêu.
+          Chọn đặc trưng tương quan cao.
+        - Kiểm tra đa cộng tuyến (ví dụ: xG và Bàn thắng). Nếu có, giữ một hoặc tạo đặc trưng mới.
+     2. Sử dụng kiến thức chuyên môn:
+        - Chuyên gia bóng đá biết chỉ số nào quan trọng (Bàn thắng, Kiến tạo, Tuổi, Phút thi đấu, xG, xAG).
+     3. Dựa trên mô hình:
+        - Regularization (L1 - Lasso): Tự động co hệ số đặc trưng không quan trọng về 0.
+        - Feature Importance từ mô hình cây (Random Forest, Gradient Boosting): Cung cấp điểm quan trọng của từng đặc trưng.
+        - Recursive Feature Elimination (RFE): Lặp lại mô hình, loại bỏ đặc trưng yếu nhất.
+     4. PCA: Giảm số chiều bằng cách tạo thành phần chính mới (khó diễn giải hơn đặc trưng gốc, thường dùng giảm chiều).
+
+   * Các đặc trưng tiềm năng quan trọng: Tuổi, Vị trí, Số phút thi đấu, Bàn thắng, Kiến tạo, xG, xAG, các chỉ số "Per 90 minutes", Tỷ lệ chuyền bóng thành công, chỉ số tạo cơ hội, chỉ số phòng ngự.
+
+3. Lựa chọn Mô hình:
+
+   * Mục tiêu: Chọn mô hình học máy phù hợp nhất.
+
+   * Các ứng viên mô hình hồi quy phổ biến:
+     1. Linear Regression: Đơn giản, dễ diễn giải, baseline tốt (có thể dùng Ridge/Lasso).
+     2. Support Vector Regression (SVR): Hiệu quả trong không gian nhiều chiều.
+     3. Decision Tree Regression: Dễ hiểu, dễ overfitting.
+     4. Random Forest Regression: Ensemble, giảm overfitting, hiệu suất tốt, xử lý quan hệ phi tuyến.
+     5. Gradient Boosting Regressors (XGBoost, LightGBM, CatBoost): Thường hiệu suất rất cao, xử lý quan hệ phức tạp. Lựa chọn hàng đầu.
+     6. Neural Networks: Mô hình hóa quan hệ rất phức tạp, cần nhiều dữ liệu, tinh chỉnh cẩn thận.
+
+   * Tiêu chí lựa chọn:
+     - Độ chính xác dự đoán (MAE, MSE, RMSE, R-squared).
+     - Khả năng diễn giải.
+     - Thời gian huấn luyện và dự đoán.
+     - Khả năng xử lý các loại dữ liệu.
+     - Độ phức tạp và nguy cơ overfitting.
+
+   * Đề xuất cụ thể:
+     - Bắt đầu với Linear Regression (Ridge hoặc Lasso) làm baseline.
+     - Thử nghiệm Random Forest Regressor và Gradient Boosting Regressor (XGBoost hoặc LightGBM).
+     - Dùng K-fold Cross-Validation để đánh giá mô hình, tránh overfitting.
+     - Tinh chỉnh siêu tham số cho mô hình tốt nhất (GridSearchCV, RandomizedSearchCV).
+
+4. Đánh giá và Tinh chỉnh Mô hình:
+
+   * Dùng tập dữ liệu kiểm tra (test set) riêng để đánh giá hiệu suất cuối cùng.
+   * Phân tích lỗi: Xem xét trường hợp dự đoán sai lệch nhiều để cải thiện.
+   * Lặp lại các bước lựa chọn đặc trưng, mô hình nếu cần.
 
 Tóm lại, về việc lựa chọn đặc trưng và mô hình:
 
-* Lựa chọn Đặc trưng (How do you select feature?):
-    - Kết hợp kiến thức chuyên môn (domain knowledge) về các chỉ số bóng đá quan trọng.
-    - Sử dụng các kỹ thuật thống kê như phân tích tương quan.
-    - Áp dụng các phương pháp dựa trên mô hình như L1 regularization (Lasso) hoặc feature importance từ Random Forest/Gradient Boosting.
-    - Ưu tiên các đặc trưng có ý nghĩa, liên quan trực tiếp đến hiệu suất và tiềm năng của cầu thủ (ví dụ: tuổi, vị trí, bàn thắng, kiến tạo, các chỉ số "expected", số phút thi đấu).
+* Lựa chọn Đặc trưng:
+  - Kết hợp kiến thức chuyên môn về chỉ số bóng đá.
+  - Dùng kỹ thuật thống kê (phân tích tương quan).
+  - Áp dụng phương pháp dựa trên mô hình (L1 regularization, feature importance).
+  - Ưu tiên đặc trưng có ý nghĩa, liên quan hiệu suất, tiềm năng cầu thủ (tuổi, vị trí, bàn thắng, kiến tạo, "expected", phút thi đấu).
 
-* Lựa chọn Mô hình (How do you select model?):
-    - Bắt đầu với một mô hình cơ sở đơn giản (ví dụ: Linear Regression).
-    - Thử nghiệm các mô hình mạnh mẽ hơn, đặc biệt là các thuật toán ensemble dựa trên cây như Random Forest Regressor hoặc Gradient Boosting Regressor (XGBoost, LightGBM), vì chúng thường cho kết quả tốt nhất trên dữ liệu dạng bảng và có khả năng nắm bắt các mối quan hệ phi tuyến phức tạp.
-    - Sử dụng cross-validation để so sánh hiệu suất các mô hình một cách khách quan.
-    - Tinh chỉnh siêu tham số cho mô hình hoạt động tốt nhất.
-    - Cân nhắc giữa độ chính xác và khả năng diễn giải của mô hình.
+* Lựa chọn Mô hình:
+  - Bắt đầu với mô hình cơ sở đơn giản (Linear Regression).
+  - Thử nghiệm mô hình mạnh hơn (Random Forest, Gradient Boosting - XGBoost, LightGBM) - thường tốt cho dữ liệu bảng, quan hệ phi tuyến.
+  - Dùng cross-validation để so sánh khách quan.
+  - Tinh chỉnh siêu tham số.
+  - Cân nhắc giữa độ chính xác và khả năng diễn giải.
 
-Phương pháp này cung cấp một khung sườn chi tiết để tiếp cận bài toán ước tính giá trị cầu thủ một cách có hệ thống và dựa trên dữ liệu.
+Phương pháp này cung cấp khung sườn chi tiết để tiếp cận bài toán
+ước tính giá trị cầu thủ một cách có hệ thống và dựa trên dữ liệu.

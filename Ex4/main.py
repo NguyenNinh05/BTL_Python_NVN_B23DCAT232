@@ -66,7 +66,7 @@ def extract_player_data(player, team_name, filtered_players_set):
         player_name = player_name_elem.text.strip()
         
         if (player_name, team_name) not in filtered_players_set:
-            print(f"  - Skipping player: {player_name} (not in filtered list or under 900 minutes)")
+            print(f"Skip {player_name}")
             return None
         
         try:
@@ -84,7 +84,7 @@ def extract_player_data(player, team_name, filtered_players_set):
             'Transfer Value': transfer_value
         }
     except Exception as e:
-        print(f"  - Error extracting player data: {str(e)}")
+        print(f"E: {str(e)}")
         return None
 
 
